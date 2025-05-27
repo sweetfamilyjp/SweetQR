@@ -79,25 +79,22 @@
       cursor: pointer;
       color: #4a004a;
     }
-.instagram-link {
-  display: inline-block;
-  margin-left: 0.4rem;
-  vertical-align: middle;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.instagram-link:hover {
-  transform: scale(1.1);
-  opacity: 0.8;
-}
-
-.instagram-icon {
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-  vertical-align: text-bottom;
-}
-
+    .instagram-link {
+      display: inline-block;
+      margin-left: 0.4rem;
+      vertical-align: middle;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .instagram-link:hover {
+      transform: scale(1.1);
+      opacity: 0.8;
+    }
+    .instagram-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      vertical-align: text-bottom;
+    }
   </style>
 </head>
 <body>
@@ -130,21 +127,20 @@
       <img src="imagens/valor-premio.png" alt="Prize Value Example" class="imagem-teclado">
 
       <p id="passo4"><strong>4 - 当選金額が表示されたら、購入準備完了です！そのままご購入ください。</strong></p>
-      
-      <!-- 🆕 NOVO ELEMENTO COM DESCRIÇÃO DOS PRÊMIOS -->
+
       <p id="valoresPossiveis" class="cupom-desconto"></p>
 
       <p id="extraChance">
-  <strong>
-    📸 チャンス追加！スイートファミリーのわたあめと一緒に写真を撮って、Instagramで @sweetfamily.jp をタグ付け投稿すると、無料わたあめが当たるかも！
-    <a href="https://www.instagram.com/sweetfamily.jp" target="_blank" class="instagram-link">
-      <img src="imagens/instagram-icon.png" alt="Instagram" class="instagram-icon">
-    </a>
-  </strong>
-</p>
-
+        <strong>
+          📸 チャンス追加！スイートファミリーのわたあめと一緒に写真を撮って、Instagramで @sweetfamily.jp をタグ付け投稿すると、無料わたあめが当たるかも！
+          <a href="https://www.instagram.com/sweetfamily.jp" target="_blank" class="instagram-link">
+            <img src="imagens/instagram-icon.png" alt="Instagram" class="instagram-icon">
+          </a>
+        </strong>
+      </p>
     </div>
   </div>
+
 <script>
   const hoje = new Date();
   const hojeStr = hoje.toISOString().split("T")[0];
@@ -219,7 +215,6 @@
     document.getElementById("extraChance").innerHTML = `<strong>${t.extraChance}</strong>`;
   }
 
-  // ⚙️ Carregamento do cupom (do localStorage ou servidor)
   const dadosCupom = JSON.parse(localStorage.getItem("sweet_family_cupom_diario") || "{}");
 
   if (dadosCupom.data === hojeStr) {
@@ -240,22 +235,25 @@
 
         fetch("https://script.google.com/macros/s/AKfycbyHQmXsbjpOVGasBGxoY_6MQm42E4_FGCwwupVOLymRVIK6jZBhSyKEGOGN02pPKHaK/exec", {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
           body: JSON.stringify({
             code: cupom.code,
             valor: cupom.valor,
             lang: langSalvo,
             userAgent: navigator.userAgent
-          }),
-          headers: { "Content-Type": "application/json" }
-        });
+          })
+        })
+        .then(res => res.text())
+        .then(msg => console.log("🟢 RESPOSTA do POST:", msg))
+        .catch(err => console.error("❌ ERRO no POST:", err));
 
         exibirCupom(cupom);
       });
   }
 
-  // ⚙️ Carrega idioma salvo ao abrir
   setLanguage(langSalvo);
 </script>
-
 </body>
 </html>

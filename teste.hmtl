@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Teste de POST para Apps Script</title>
+</head>
+<body>
+  <h1>Teste de POST para Google Apps Script</h1>
+  <button onclick="enviarDados()">Enviar Teste</button>
+
+  <script>
+    function enviarDados() {
+      fetch("https://script.google.com/macros/s/AKfycbyHQmXsbjpOVGasBGxoY_6MQm42E4_FGCwwupVOLymRVIK6jZBhSyKEGOGN02pPKHaK/exec", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code: "99999999",
+          valor: 123,
+          lang: "pt",
+          userAgent: navigator.userAgent
+        })
+      })
+      .then(res => res.text())
+      .then(msg => alert("Resposta do servidor: " + msg))
+      .catch(err => console.error("Erro ao enviar:", err));
+    }
+  </script>
+</body>
+</html>

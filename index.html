@@ -79,6 +79,25 @@
       cursor: pointer;
       color: #4a004a;
     }
+.instagram-link {
+  display: inline-block;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.instagram-link:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+}
+
+.instagram-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  vertical-align: text-bottom;
+}
+
   </style>
 </head>
 <body>
@@ -111,95 +130,25 @@
       <img src="imagens/valor-premio.png" alt="Prize Value Example" class="imagem-teclado">
 
       <p id="passo4"><strong>4 - 当選金額が表示されたら、購入準備完了です！そのままご購入ください。</strong></p>
+      
+      <!-- 🆕 NOVO ELEMENTO COM DESCRIÇÃO DOS PRÊMIOS -->
+      <p id="valoresPossiveis" class="cupom-desconto"></p>
 
-      <p id="extraChance"><strong>📸 チャンス追加！スイートファミリーのわたあめと一緒に写真を撮って、Instagramで @sweetfamily.jp をタグ付け投稿すると、無料わたあめが当たるかも！</strong></p>
+      <p id="extraChance">
+  <strong>
+    📸 チャンス追加！スイートファミリーのわたあめと一緒に写真を撮って、Instagramで @sweetfamily.jp をタグ付け投稿すると、無料わたあめが当たるかも！
+    <a href="https://www.instagram.com/sweetfamily.jp" target="_blank" class="instagram-link">
+      <img src="imagens/instagram-icon.png" alt="Instagram" class="instagram-icon">
+    </a>
+  </strong>
+</p>
+
     </div>
   </div>
 <script>
-  const cupons = [
-    // 🟡 ¥100
-    "73421896","52713649","14975368","46539271","63754289","98156427","65914273","65738149","39658741","67139854",
-    "51679823","52638174","93815427","56429817","39468517","81497326","35416879","36498271","81642957","91586247",
-    "87951423","75428631","56127984","35167982","34892657","34917852","25184793","67481932","56127498","21368954",
-    "57691834","18345297","57132846","23975418","63589147","94685123","18632457","54729618","95428163","54837916",
-    "71485923","87915342","63197542","82671954","16425839","12894637","25914638","28146739","63752981","91674532",
-    "86751432","93476182","16894523","62987415","57439168","17839462","23869574","52937681","37952681","64512783",
-    "91486723","29356718","31972465","75289136","94183576","37891546","47251639","28194576","26957138","79253186",
-    "95624187","82963541","84526173","51986423","94236715","39847516","97428315","51968372","57689231","53614782",
-    "72491356","73146598","59178342","76593214","24879316","74316589","25397416","94853162","12456738","64537129",
-    "79421538","12573498","98327164","76835149","64153827","42785693","26851397","52176389","98317456","17394856"
-  ].map(code => ({ code, valor: 100 }))
-  .concat([
-    // 🟠 ¥200
-    "74163258","25374681","84192367","41795362","23875164","58741326","37914856","19384762","57946283","54913267",
-    "82163579","93825641","89135724","86753192","28653197","98631427","48263791","46219385","34786529","93257486",
-    "78163294","94258617","35746128","96275438","91542736","74865312","65247381","25391674","62573184","16829734"
-  ].map(code => ({ code, valor: 200 })))
-
-
-.concat([
-  // 🟢 ¥300
-  "57398261", "26784931", "21763549", "45873162", "87634925", "97321548",
-  "61935724", "58913674", "37481695", "24159683", "61985427", "51476938",
-  "93527184", "63789245", "69472358", "59438126", "76841235", "83754196",
-  "48697513", "26573891", "56943718", "49275386", "43891567", "34871529",
-  "34879562", "14375682", "93817564", "96435128", "23875461", "67832154"
-].map(code => ({ code, valor: 300 })))
-
-
-.concat([
-  // 🔵 ¥400
-  "85972136", "43812596", "16857429", "49281753", "65324917",
-  "28517349", "39715628", "75869321", "17698432", "52746391",
-  "34127968", "36524981", "14698273", "93467182", "38629751",
-  "59684371", "17984635", "64132897", "27569134", "51739624",
-  "67239418", "12689437", "19635824", "39854761", "98165327"
-].map(code => ({ code, valor: 400 })))
-
-.concat([
-  // 🔴 ¥500
-  "36257149", "36489571", "76534921", "16254379", "59172438", "71365982", "68743125", "45861973", "97584612", "94781265",
-  "89316527", "43752896", "56983142", "59642831", "96472538", "75428361", "63815794", "58913472", "71486925", "76831529"
-].map(code => ({ code, valor: 500 })))
-
-
-;
-
   const hoje = new Date();
   const hojeStr = hoje.toISOString().split("T")[0];
-  const dadosCupom = JSON.parse(localStorage.getItem("sweet_family_cupom_diario") || "{}");
-
-  let cupom;
-  if (dadosCupom.data === hojeStr) {
-    cupom = dadosCupom.cupom;
-  } else {
-    cupom = cupons[Math.floor(Math.random() * cupons.length)];
-    localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({
-      data: hojeStr,
-      cupom: cupom
-    }));
-  }
-if (!cupom.valor) {
-  // tenta recuperar novamente com valor do array atualizado
-  const atualizado = cupons.find(c => c.code === cupom.code);
-  if (atualizado) {
-    cupom.valor = atualizado.valor;
-    // salva o cupom corrigido no localStorage
-    localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({
-      data: hojeStr,
-      cupom: cupom
-    }));
-  } else {
-    // fallback preventivo
-    cupom.valor = 100;
-  }
-}
-  const validade = new Date();
-  validade.setDate(validade.getDate() + 10);
-  const validadeStr = `${validade.getFullYear()}/${String(validade.getMonth() + 1).padStart(2, '0')}/${String(validade.getDate()).padStart(2, '0')}`;
-
-  document.getElementById("cupomCode").textContent = cupom.code;
-  document.getElementById("validade").textContent = validadeStr;
+  const langSalvo = localStorage.getItem("lang_sweetfamily") || "jp";
 
   const traducoes = {
     pt: {
@@ -212,6 +161,7 @@ if (!cupom.valor) {
       passo3: "3 - A máquina mostrará o valor do seu prêmio no canto inferior esquerdo.",
       passo4: "4 - Se o valor apareceu, funcionou! Agora é só comprar normalmente.",
       extraChance: "📸 Chance extra! Poste uma foto com o algodão doce da Sweet Family e marque @sweetfamily.jp no Instagram para concorrer a um algodão doce grátis.",
+      descontosPossiveis: "※ Neste sorteio, você pode ganhar um cupom de ¥100, ¥200, ¥300, ¥400 ou ¥500!",
       desconto: valor => `※ Este cupom dá direito a ¥${valor} de desconto.`
     },
     en: {
@@ -224,6 +174,7 @@ if (!cupom.valor) {
       passo3: "3 - The machine will show your prize in the bottom-left corner.",
       passo4: "4 - If a value appeared, it worked! Now complete your purchase.",
       extraChance: "📸 Extra chance! Post a photo with your Sweet Family cotton candy and tag @sweetfamily.jp on Instagram to win one for free!",
+      descontosPossiveis: "※ In this lottery, you can win a coupon worth ¥100, ¥200, ¥300, ¥400, or ¥500!",
       desconto: valor => `※ This coupon gives you a ¥${valor} discount.`
     },
     jp: {
@@ -236,28 +187,75 @@ if (!cupom.valor) {
       passo3: "3 - 以下のように、画面左下に当選金額が表示されます。",
       passo4: "4 - 金額が表示されたら、購入準備完了です！そのままご購入ください。",
       extraChance: "📸 チャンス追加！スイートファミリーのわたあめと一緒に写真を撮って、Instagramで @sweetfamily.jp をタグ付け投稿すると、無料わたあめが当たるかも！",
+      descontosPossiveis: "※ 本日のくじ引きでは、¥100 / ¥200 / ¥300 / ¥400 / ¥500 のいずれかが当たります！",
       desconto: valor => `※ このクーポンを使うと、¥${valor} 割引になります。`
     }
   };
+
+  function exibirCupom(cupom) {
+    const validade = new Date();
+    validade.setDate(validade.getDate() + 10);
+    const validadeStr = `${validade.getFullYear()}/${String(validade.getMonth() + 1).padStart(2, '0')}/${String(validade.getDate()).padStart(2, '0')}`;
+
+    document.getElementById("cupomCode").textContent = cupom.code;
+    document.getElementById("validade").textContent = validadeStr;
+
+    const t = traducoes[langSalvo];
+    document.getElementById("cupomAviso").innerHTML = `<strong>${t.desconto(cupom.valor)}</strong>`;
+    document.getElementById("validadeLabel").innerHTML = `${t.validade} <span id="validade">${validadeStr}</span>`;
+    document.getElementById("valoresPossiveis").textContent = t.descontosPossiveis;
+  }
 
   function setLanguage(lang) {
     localStorage.setItem("lang_sweetfamily", lang);
     const t = traducoes[lang];
     document.getElementById("titulo").textContent = t.titulo;
     document.getElementById("botaoSalvar").textContent = t.botaoSalvar;
-    document.getElementById("validadeLabel").innerHTML = `${t.validade} <span id="validade">${validadeStr}</span>`;
     document.getElementById("comoUsarTitulo").textContent = t.comoUsar;
     document.getElementById("passo1").innerHTML = `<strong>${t.passo1}</strong>`;
     document.getElementById("passo2").innerHTML = `<strong>${t.passo2}</strong>`;
     document.getElementById("passo3").innerHTML = `<strong>${t.passo3}</strong>`;
     document.getElementById("passo4").innerHTML = `<strong>${t.passo4}</strong>`;
     document.getElementById("extraChance").innerHTML = `<strong>${t.extraChance}</strong>`;
-    document.getElementById("cupomAviso").innerHTML = `<strong>${t.desconto(cupom.valor)}</strong>`;
   }
 
-  // Carrega o idioma salvo ou define jp como padrão
-  const langSalvo = localStorage.getItem("lang_sweetfamily") || "jp";
+  // ⚙️ Carregamento do cupom (do localStorage ou servidor)
+  const dadosCupom = JSON.parse(localStorage.getItem("sweet_family_cupom_diario") || "{}");
+
+  if (dadosCupom.data === hojeStr) {
+    exibirCupom(dadosCupom.cupom);
+  } else {
+    fetch("https://script.google.com/macros/s/AKfycbyHQmXsbjpOVGasBGxoY_6MQm42E4_FGCwwupVOLymRVIK6jZBhSyKEGOGN02pPKHaK/exec")
+      .then(res => res.json())
+      .then(cupom => {
+        if (cupom.error) {
+          alert("Sem cupons disponíveis no momento.");
+          return;
+        }
+
+        localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({
+          data: hojeStr,
+          cupom
+        }));
+
+        fetch("https://script.google.com/macros/s/AKfycbyHQmXsbjpOVGasBGxoY_6MQm42E4_FGCwwupVOLymRVIK6jZBhSyKEGOGN02pPKHaK/exec", {
+          method: "POST",
+          body: JSON.stringify({
+            code: cupom.code,
+            valor: cupom.valor,
+            lang: langSalvo,
+            userAgent: navigator.userAgent
+          }),
+          headers: { "Content-Type": "application/json" }
+        });
+
+        exibirCupom(cupom);
+      });
+  }
+
+  // ⚙️ Carrega idioma salvo ao abrir
   setLanguage(langSalvo);
 </script>
+
 </body>
 </html>

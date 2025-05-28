@@ -20,12 +20,11 @@
       margin: auto;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     }
-   .logo {
-  width: 90%;
-  max-width: 360px;
-  margin-bottom: 2rem;
-}
-
+    .logo {
+      width: 90%;
+      max-width: 360px;
+      margin-bottom: 2rem;
+    }
     .cupom {
       background: #ffcbeb;
       padding: 1.5rem;
@@ -108,7 +107,7 @@
 
   <div class="container">
     <img src="imagens/logo-sweet-family-oficial.png" alt="Sweet Family Logo" class="logo">
-    <h1>🎁 <span id="titulo">スイートファミリーのくじ引き</span></h1>
+    <h1>🎁 <span id="titulo">くじ引き</span></h1>
 
     <div class="cupom" id="cupomCode">CARREGANDO...</div>
     <p class="cupom-desconto" id="cupomAviso">※ クーポンを読み込み中...</p>
@@ -140,6 +139,11 @@
           </a>
         </strong>
       </p>
+
+      <div class="instrucoes" style="margin-top: 2.5rem;">
+        <h2>📄 <span id="regrasTitulo">Regras da Promoção</span></h2>
+        <ul id="regrasConteudo" style="text-align: left; font-size: 0.9rem; padding-left: 1rem; line-height: 1.6;"></ul>
+      </div>
     </div>
   </div>
 
@@ -152,7 +156,7 @@
     pt: {
       titulo: "Sorteio",
       botaoSalvar: "Salvar Cupom",
-      validade: "(Você também pode tirar um Print)Válido até:",
+      validade: "Válido até:",
       comoUsar: "📌 Como usar:",
       passo1: "1 - Toque no botão rosa “Promotion Code” (canto inferior esquerdo da tela).",
       passo2: "2 - Digite o código do cupom e confirme no botão azul.",
@@ -165,7 +169,7 @@
     en: {
       titulo: "Lottery",
       botaoSalvar: "Save Coupon",
-      validade: "(You can also take a screenshot)Valid until:",
+      validade: "Valid until:",
       comoUsar: "📌 How to use:",
       passo1: "1 - Tap the pink 'Promotion Code' button (bottom left).",
       passo2: "2 - Enter the coupon code and confirm using the blue button.",
@@ -177,8 +181,8 @@
     },
     jp: {
       titulo: "くじ引き",
-      botaoSalvar: "クーポンを保存",
-      validade: "（スクリーンショットでもOK）有効期限:",
+      botaoSalvar: "クーポンを保存（スクリーンショットでもOK）",
+      validade: "有効期限:",
       comoUsar: "📌 使い方：",
       passo1: "1 - 画面左下のピンクの「プロモーションコード」ボタンをタップしてください。",
       passo2: "2 - クーポンコードを入力し、青い確認ボタンを押してください。",
@@ -215,6 +219,49 @@
     document.getElementById("passo3").innerHTML = `<strong>${t.passo3}</strong>`;
     document.getElementById("passo4").innerHTML = `<strong>${t.passo4}</strong>`;
     document.getElementById("extraChance").innerHTML = `<strong>${t.extraChance}</strong>`;
+
+    const regras = {
+      pt: [
+        "Cada pessoa pode participar do sorteio apenas 1 vez por dia.",
+        "O cupom é válido por 10 dias a partir da data de geração.",
+        "O cupom deve ser digitado na máquina antes da compra.",
+        "O desconto é aplicado automaticamente no valor da compra.",
+        "O cupom é válido somente nas máquinas da Sweet Family.",
+        "A Sweet Family se reserva o direito de cancelar a promoção a qualquer momento, sem aviso prévio.",
+        "Cupons obtidos por meios não autorizados serão considerados inválidos."
+      ],
+      en: [
+        "Each person can participate in the lottery only once per day.",
+        "The coupon is valid for 10 days from the date it is generated.",
+        "The coupon must be entered into the machine before the purchase.",
+        "The discount will be applied automatically to the purchase amount.",
+        "The coupon is valid only on Sweet Family machines.",
+        "Sweet Family reserves the right to cancel the promotion at any time without prior notice.",
+        "Coupons obtained through unauthorized means will be considered invalid."
+      ],
+      jp: [
+        "お一人様1日1回までくじ引きに参加できます。",
+        "クーポンは発行日から10日間有効です。",
+        "購入前にクーポンコードを機械に入力してください。",
+        "割引は自動的に購入金額に適用されます。",
+        "クーポンはスイートファミリーの機械のみで使用可能です。",
+        "スイートファミリーは予告なく本キャンペーンを終了する権利を有します。",
+        "不正な方法で取得されたクーポンは無効とされます。"
+      ]
+    };
+
+    document.getElementById("regrasTitulo").textContent =
+      lang === "pt" ? "Regras da Promoção" :
+      lang === "en" ? "Promotion Rules" :
+      "キャンペーンのルール";
+
+    const regrasList = document.getElementById("regrasConteudo");
+    regrasList.innerHTML = "";
+    regras[lang].forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = item;
+      regrasList.appendChild(li);
+    });
   }
 
   const dadosCupom = JSON.parse(localStorage.getItem("sweet_family_cupom_diario") || "{}");

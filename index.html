@@ -164,7 +164,7 @@
       passo4: "4 - Se o valor apareceu, funcionou! Agora é só comprar normalmente.",
       extraChance: "📸 Chance extra! Poste uma foto com o algodão doce da Sweet Family e marque @sweetfamily.jp no Instagram para concorrer a um algodão doce grátis.",
       descontosPossiveis: "※ Neste sorteio, você pode ganhar um cupom de ¥100, ¥200, ¥300, ¥400 ou ¥500!",
-      desconto: valor => `※ Este cupom dá direito a ¥${valor} de desconto.`
+      desconto: valor => `※ Este cupom dá direito a <span style="font-size:1.4em; font-weight:bold; color:#e10098;">¥${valor}</span> de desconto.`
     },
     en: {
       titulo: "Lottery",
@@ -177,7 +177,7 @@
       passo4: "4 - If a value appeared, it worked! Now complete your purchase.",
       extraChance: "📸 Extra chance! Post a photo with your Sweet Family cotton candy and tag @sweetfamily.jp on Instagram to win one for free!",
       descontosPossiveis: "※ In this lottery, you can win a coupon worth ¥100, ¥200, ¥300, ¥400, or ¥500!",
-      desconto: valor => `※ This coupon gives you a ¥${valor} discount.`
+      desconto: valor => `※ This coupon gives you a <span style="font-size:1.4em; font-weight:bold; color:#e10098;">¥${valor}</span> discount.`
     },
     jp: {
       titulo: "くじ引き",
@@ -190,7 +190,7 @@
       passo4: "4 - 金額が表示されたら、購入準備完了です！そのままご購入ください。",
       extraChance: "📸 チャンス追加！スイートファミリーのわたあめと一緒に写真を撮って、Instagramで @sweetfamily.jp をタグ付け投稿すると、無料わたあめが当たるかも！",
       descontosPossiveis: "※ 本日のくじ引きでは、¥100 / ¥200 / ¥300 / ¥400 / ¥500 のいずれかが当たります！",
-      desconto: valor => `※ このクーポンを使うと、¥${valor} 割引になります。`
+      desconto: valor => `※ このクーポンを使うと、<span style="font-size:1.4em; font-weight:bold; color:#e10098;">¥${valor}</span> 割引になります。`
     }
   };
 
@@ -198,7 +198,6 @@
     const validade = new Date();
     validade.setDate(validade.getDate() + 10);
     const validadeStr = `${validade.getFullYear()}/${String(validade.getMonth() + 1).padStart(2, '0')}/${String(validade.getDate()).padStart(2, '0')}`;
-
     document.getElementById("cupomCode").textContent = cupom.code;
     document.getElementById("validade").textContent = validadeStr;
 
@@ -219,49 +218,6 @@
     document.getElementById("passo3").innerHTML = `<strong>${t.passo3}</strong>`;
     document.getElementById("passo4").innerHTML = `<strong>${t.passo4}</strong>`;
     document.getElementById("extraChance").innerHTML = `<strong>${t.extraChance}</strong>`;
-
-    const regras = {
-      pt: [
-        "Cada pessoa pode participar do sorteio apenas 1 vez por dia.",
-        "O cupom é válido por 10 dias a partir da data de geração.",
-        "O cupom deve ser digitado na máquina antes da compra.",
-        "O desconto é aplicado automaticamente no valor da compra.",
-        "O cupom é válido somente nas máquinas da Sweet Family.",
-        "A Sweet Family se reserva o direito de cancelar a promoção a qualquer momento, sem aviso prévio.",
-        "Cupons obtidos por meios não autorizados serão considerados inválidos."
-      ],
-      en: [
-        "Each person can participate in the lottery only once per day.",
-        "The coupon is valid for 10 days from the date it is generated.",
-        "The coupon must be entered into the machine before the purchase.",
-        "The discount will be applied automatically to the purchase amount.",
-        "The coupon is valid only on Sweet Family machines.",
-        "Sweet Family reserves the right to cancel the promotion at any time without prior notice.",
-        "Coupons obtained through unauthorized means will be considered invalid."
-      ],
-      jp: [
-        "お一人様1日1回までくじ引きに参加できます。",
-        "クーポンは発行日から10日間有効です。",
-        "購入前にクーポンコードを機械に入力してください。",
-        "割引は自動的に購入金額に適用されます。",
-        "クーポンはスイートファミリーの機械のみで使用可能です。",
-        "スイートファミリーは予告なく本キャンペーンを終了する権利を有します。",
-        "不正な方法で取得されたクーポンは無効とされます。"
-      ]
-    };
-
-    document.getElementById("regrasTitulo").textContent =
-      lang === "pt" ? "Regras da Promoção" :
-      lang === "en" ? "Promotion Rules" :
-      "キャンペーンのルール";
-
-    const regrasList = document.getElementById("regrasConteudo");
-    regrasList.innerHTML = "";
-    regras[lang].forEach(item => {
-      const li = document.createElement("li");
-      li.textContent = item;
-      regrasList.appendChild(li);
-    });
   }
 
   const dadosCupom = JSON.parse(localStorage.getItem("sweet_family_cupom_diario") || "{}");
@@ -269,7 +225,7 @@
   if (dadosCupom.data === hojeStr) {
     exibirCupom(dadosCupom.cupom);
   } else {
-    fetch("https://script.google.com/macros/s/AKfycbyHQmXsbjpOVGasBGxoY_6MQm42E4_FGCwwupVOLymRVIK6jZBhSyKEGOGN02pPKHaK/exec")
+    fetch("https://script.google.com/macros/s/YOUR-ENDPOINT-HERE/exec")
       .then(res => res.json())
       .then(cupom => {
         if (cupom.error) {
@@ -282,7 +238,7 @@
           cupom
         }));
 
-        fetch("https://script.google.com/macros/s/AKfycbyHQmXsbjpOVGasBGxoY_6MQm42E4_FGCwwupVOLymRVIK6jZBhSyKEGOGN02pPKHaK/exec", {
+        fetch("https://script.google.com/macros/s/YOUR-ENDPOINT-HERE/exec", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

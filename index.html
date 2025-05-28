@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head><script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
-
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🎁 くじ引き | Sweet Family</title>
@@ -105,47 +105,46 @@
   </style>
 </head>
 <body>
-  <div class="idiomas">
-    <button onclick="setLanguage('pt')">PT</button>
-    <button onclick="setLanguage('en')">EN</button>
-    <button onclick="setLanguage('jp')">JP</button>
-  </div>
+<div class="idiomas">
+  <button onclick="setLanguage('pt')">PT</button>
+  <button onclick="setLanguage('en')">EN</button>
+  <button onclick="setLanguage('jp')">JP</button>
+</div>
 
-  <div class="container">
-    <img src="imagens/logo-sweet-family-oficial.png" alt="Sweet Family Logo" class="logo">
-    <h1>🎁 <span id="titulo">くじ引き</span></h1>
+<div class="container">
+  <img src="imagens/logo-sweet-family-oficial.png" alt="Sweet Family Logo" class="logo">
+  <h1>🎁 <span id="titulo">くじ引き</span></h1>
 
-    <div class="cupom" id="cupomCode">CARREGANDO...</div>
-    <p class="cupom-desconto" id="cupomAviso">※ クーポンを読み込み中...</p>
+  <div class="cupom" id="cupomCode">CARREGANDO...</div>
+  <p class="cupom-desconto" id="cupomAviso">※ クーポンを読み込み中...</p>
 
-    <button class="botao-salvar" onclick="window.print()">🖨️ <span id="botaoSalvar">クーポンを保存</span></button>
+  <button class="botao-salvar" onclick="window.print()">🖨️ <span id="botaoSalvar">クーポンを保存</span></button>
 
-    <p class="validade" id="validadeLabel">有効期限: <span id="validade"></span></p>
+  <p class="validade" id="validadeLabel">有効期限: <span id="validade"></span></p>
 
-    <div class="instrucoes">
-      <h2 id="comoUsarTitulo">📌 使い方：</h2>
-      <p id="passo1"></p>
-      <img src="imagens/botao-promocode.png" alt="Promo Code Button" class="imagem-teclado">
-      <p id="passo2"></p>
-      <img src="imagens/teclado-confirmacao.png" alt="Machine Keyboard" class="imagem-teclado">
-      <p id="passo3"></p>
-      <img src="imagens/valor-premio.png" alt="Prize Value Example" class="imagem-teclado">
-      <p id="passo4"></p>
+  <div class="instrucoes">
+    <h2 id="comoUsarTitulo">📌 使い方：</h2>
+    <p id="passo1"></p>
+    <img src="imagens/botao-promocode.png" alt="Promo Code Button" class="imagem-teclado">
+    <p id="passo2"></p>
+    <img src="imagens/teclado-confirmacao.png" alt="Machine Keyboard" class="imagem-teclado">
+    <p id="passo3"></p>
+    <img src="imagens/valor-premio.png" alt="Prize Value Example" class="imagem-teclado">
+    <p id="passo4"></p>
 
-      <p id="valoresPossiveis" class="cupom-desconto"></p>
-      <p id="extraChance"></p>
+    <p id="valoresPossiveis" class="cupom-desconto"></p>
+    <p id="extraChance"></p>
 
-      <div class="instrucoes" style="margin-top: 2.5rem;">
-        <h2>📄 <span id="regrasTitulo">Regras da Promoção</span></h2>
-        <ul id="regrasConteudo" style="text-align: left; font-size: 0.9rem; padding-left: 1rem; line-height: 1.6;"></ul>
-      </div>
+    <div class="instrucoes" style="margin-top: 2.5rem;">
+      <h2>📄 <span id="regrasTitulo">Regras da Promoção</span></h2>
+      <ul id="regrasConteudo" style="text-align: left; font-size: 0.9rem; padding-left: 1rem; line-height: 1.6;"></ul>
     </div>
   </div>
+</div>
 <script>
   const hoje = new Date();
   const hojeStr = hoje.toISOString().split("T")[0];
   const langSalvo = localStorage.getItem("lang_sweetfamily") || "jp";
-
   const endpoint = "https://script.google.com/macros/s/AKfycbyHQmXsbjpOVGasBGxoY_6MQm42E4_FGCwwupVOLymRVIK6jZBhSyKEGOGN02pPKHaK/exec";
 
   const traducoes = {
@@ -192,7 +191,6 @@
       regrasTitulo: "キャンペーンのルール"
     }
   };
-
   function exibirCupom(cupom) {
     const validade = new Date();
     validade.setDate(validade.getDate() + 10);
@@ -258,8 +256,7 @@
     });
   }
 
-   const dadosCupom = JSON.parse(localStorage.getItem("sweet_family_cupom_diario") || "{}");
-
+  const dadosCupom = JSON.parse(localStorage.getItem("sweet_family_cupom_diario") || "{}");
   if (dadosCupom.data === hojeStr) {
     exibirCupom(dadosCupom.cupom);
   } else {
@@ -267,24 +264,29 @@
       fp.get().then(result => {
         const id = result.visitorId;
 
-        fetch(`${endpoint}?id=${id}`)
+        fetch("https://api.ipify.org?format=json")
           .then(res => res.json())
-          .then(cupom => {
-            if (cupom.error) {
-              alert(cupom.error);
-              return;
-            }
-            localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({ data: hojeStr, cupom }));
-            exibirCupom(cupom);
+          .then(ipData => {
+            const ip = ipData.ip;
+
+            fetch(`${endpoint}?id=${id}&ip=${ip}`)
+              .then(res => res.json())
+              .then(cupom => {
+                if (cupom.error) {
+                  alert(cupom.error);
+                } else {
+                  localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({ data: hojeStr, cupom }));
+                  exibirCupom(cupom);
+                }
+              })
+              .catch(() => alert("Erro ao comunicar com o servidor."));
           })
-          .catch(() => alert("Erro ao gerar cupom. Tente novamente."));
+          .catch(() => alert("Erro ao obter IP público."));
       });
     });
   }
 
   setLanguage(langSalvo);
-
 </script>
-
 </body>
 </html>

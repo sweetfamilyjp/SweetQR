@@ -260,31 +260,16 @@
   if (dadosCupom.data === hojeStr) {
     exibirCupom(dadosCupom.cupom);
   } else {
-   fetch("https://script.google.com/macros/s/AKfycbyHQmXsbjpOVGasBGxoY_6MQm42E4_FGCwwupVOLymRVIK6jZBhSyKEGOGN02pPKHaK/exec")
-  .then(res => res.json())
-  .then(cupom => {
-    if (cupom.error) {
-      alert("Sem cupons disponíveis no momento.");
-      return;
-    }
-    localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({ data: hojeStr, cupom }));
-    exibirCupom(cupom);
-
-    // Enviar dados para registro na aba "Registros"
-    fetch("https://script.google.com/macros/s/AKfycbyHQmXsbjpOVGasBGxoY_6MQm42E4_FGCwwupVOLymRVIK6jZBhSyKEGOGN02pPKHaK/exec", {
-      method: "POST",
-      body: new URLSearchParams({
-        ip: "", // Tentamos capturar no lado do servidor
-        cupom: cupom.code,
-        valor: `¥${cupom.valor}`,
-        userAgent: navigator.userAgent,
-        lang: navigator.language,
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        referer: document.referrer
-      })
-    });
-  });
-
+    fetch("https://script.google.com/macros/s/AKfycbyHQmXsbjpOVGasBGxoY_6MQm42E4_FGCwwupVOLymRVIK6jZBhSyKEGOGN02pPKHaK/exec")
+      .then(res => res.json())
+      .then(cupom => {
+        if (cupom.error) {
+          alert("Sem cupons disponíveis no momento.");
+          return;
+        }
+        localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({ data: hojeStr, cupom }));
+        exibirCupom(cupom);
+      });
   }
 
   setLanguage(langSalvo);

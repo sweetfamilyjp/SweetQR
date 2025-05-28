@@ -260,32 +260,28 @@
   if (dadosCupom.data === hojeStr) {
     exibirCupom(dadosCupom.cupom);
   } else {
-     FingerprintJS.load().then(fp => {
+    FingerprintJS.load().then(fp => {
       fp.get().then(result => {
         const id = result.visitorId;
 
-        fetch(`${endpoint}?id=${id}`)
+        fetch("https://api.ipify.org?format=json")
           .then(res => res.json())
-          .then(cupom => {
-            if (cupom.error) {
-              alert(cupom.error);
-              if (cupom.cupom) {
-                exibirCupom(cupom.cupom);
-                localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({
-                  data: hojeStr,
-                  cupom: cupom.cupom
-                }));
-              }
-              return;
-            }
+          .then(ipData => {
+            const ip = ipData.ip;
 
-            localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({
-              data: hojeStr,
-              cupom
-            }));
-            exibirCupom(cupom);
+            fetch(`${endpoint}?id=${id}&ip=${ip}`)
+              .then(res => res.json())
+              .then(cupom => {
+                if (cupom.error) {
+                  alert(cupom.error);
+                } else {
+                  localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({ data: hojeStr, cupom }));
+                  exibirCupom(cupom);
+                }
+              })
+              .catch(() => alert("Erro ao comunicar com o servidor."));
           })
-          .catch(() => alert("Erro ao gerar cupom. Tente novamente."));
+          .catch(() => alert("Erro ao obter IP público."));
       });
     });
   }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head><script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
-
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🎁 くじ引き | Sweet Family</title>
@@ -105,47 +105,46 @@
   </style>
 </head>
 <body>
-  <div class="idiomas">
-    <button onclick="setLanguage('pt')">PT</button>
-    <button onclick="setLanguage('en')">EN</button>
-    <button onclick="setLanguage('jp')">JP</button>
-  </div>
+<div class="idiomas">
+  <button onclick="setLanguage('pt')">PT</button>
+  <button onclick="setLanguage('en')">EN</button>
+  <button onclick="setLanguage('jp')">JP</button>
+</div>
 
-  <div class="container">
-    <img src="imagens/logo-sweet-family-oficial.png" alt="Sweet Family Logo" class="logo">
-    <h1>🎁 <span id="titulo">くじ引き</span></h1>
+<div class="container">
+  <img src="imagens/logo-sweet-family-oficial.png" alt="Sweet Family Logo" class="logo">
+  <h1>🎁 <span id="titulo">くじ引き</span></h1>
 
-    <div class="cupom" id="cupomCode">CARREGANDO...</div>
-    <p class="cupom-desconto" id="cupomAviso">※ クーポンを読み込み中...</p>
+  <div class="cupom" id="cupomCode">CARREGANDO...</div>
+  <p class="cupom-desconto" id="cupomAviso">※ クーポンを読み込み中...</p>
 
-    <button class="botao-salvar" onclick="window.print()">🖨️ <span id="botaoSalvar">クーポンを保存</span></button>
+  <button class="botao-salvar" onclick="window.print()">🖨️ <span id="botaoSalvar">クーポンを保存</span></button>
 
-    <p class="validade" id="validadeLabel">有効期限: <span id="validade"></span></p>
+  <p class="validade" id="validadeLabel">有効期限: <span id="validade"></span></p>
 
-    <div class="instrucoes">
-      <h2 id="comoUsarTitulo">📌 使い方：</h2>
-      <p id="passo1"></p>
-      <img src="imagens/botao-promocode.png" alt="Promo Code Button" class="imagem-teclado">
-      <p id="passo2"></p>
-      <img src="imagens/teclado-confirmacao.png" alt="Machine Keyboard" class="imagem-teclado">
-      <p id="passo3"></p>
-      <img src="imagens/valor-premio.png" alt="Prize Value Example" class="imagem-teclado">
-      <p id="passo4"></p>
+  <div class="instrucoes">
+    <h2 id="comoUsarTitulo">📌 使い方：</h2>
+    <p id="passo1"></p>
+    <img src="imagens/botao-promocode.png" alt="Promo Code Button" class="imagem-teclado">
+    <p id="passo2"></p>
+    <img src="imagens/teclado-confirmacao.png" alt="Machine Keyboard" class="imagem-teclado">
+    <p id="passo3"></p>
+    <img src="imagens/valor-premio.png" alt="Prize Value Example" class="imagem-teclado">
+    <p id="passo4"></p>
 
-      <p id="valoresPossiveis" class="cupom-desconto"></p>
-      <p id="extraChance"></p>
+    <p id="valoresPossiveis" class="cupom-desconto"></p>
+    <p id="extraChance"></p>
 
-      <div class="instrucoes" style="margin-top: 2.5rem;">
-        <h2>📄 <span id="regrasTitulo">Regras da Promoção</span></h2>
-        <ul id="regrasConteudo" style="text-align: left; font-size: 0.9rem; padding-left: 1rem; line-height: 1.6;"></ul>
-      </div>
+    <div class="instrucoes" style="margin-top: 2.5rem;">
+      <h2>📄 <span id="regrasTitulo">Regras da Promoção</span></h2>
+      <ul id="regrasConteudo" style="text-align: left; font-size: 0.9rem; padding-left: 1rem; line-height: 1.6;"></ul>
     </div>
   </div>
+</div>
 <script>
   const hoje = new Date();
   const hojeStr = hoje.toISOString().split("T")[0];
   const langSalvo = localStorage.getItem("lang_sweetfamily") || "jp";
-
   const endpoint = "https://script.google.com/macros/s/AKfycbyHQmXsbjpOVGasBGxoY_6MQm42E4_FGCwwupVOLymRVIK6jZBhSyKEGOGN02pPKHaK/exec";
 
   const traducoes = {
@@ -158,9 +157,9 @@
       passo2: "2 - Digite o código do cupom e confirme no botão azul.",
       passo3: "3 - A máquina mostrará o valor do seu prêmio no canto inferior esquerdo.",
       passo4: "4 - Se o valor apareceu, funcionou! Agora é só comprar normalmente.",
-      extraChance: 📸 Chance extra! Poste uma foto com o algodão doce da Sweet Family e marque @sweetfamily.jp no Instagram para concorrer a um algodão doce grátis. <a href="https://www.instagram.com/sweetfamily.jp" target="_blank" class="instagram-link"><img src="imagens/instagram-icon.png" class="instagram-icon"></a>,
+      extraChance: `📸 Chance extra! Poste uma foto com o algodão doce da Sweet Family e marque @sweetfamily.jp no Instagram para concorrer a um algodão doce grátis. <a href="https://www.instagram.com/sweetfamily.jp" target="_blank" class="instagram-link"><img src="imagens/instagram-icon.png" class="instagram-icon"></a>`,
       descontosPossiveis: "※ Neste sorteio, você pode ganhar um cupom de ¥100, ¥200, ¥300, ¥400 ou ¥500!",
-      desconto: valor => ※ Este cupom dá direito a <span>¥${valor}</span> de desconto.,
+      desconto: valor => `※ Este cupom dá direito a <span>¥${valor}</span> de desconto.`,
       regrasTitulo: "Regras da Promoção"
     },
     en: {
@@ -172,9 +171,9 @@
       passo2: "2 - Enter the coupon code and confirm using the blue button.",
       passo3: "3 - The machine will show your prize in the bottom-left corner.",
       passo4: "4 - If a value appeared, it worked! Now complete your purchase.",
-      extraChance: 📸 Extra chance! Post a photo with your Sweet Family cotton candy and tag @sweetfamily.jp on Instagram to win one for free! <a href="https://www.instagram.com/sweetfamily.jp" target="_blank" class="instagram-link"><img src="imagens/instagram-icon.png" class="instagram-icon"></a>,
+      extraChance: `📸 Extra chance! Post a photo with your Sweet Family cotton candy and tag @sweetfamily.jp on Instagram to win one for free! <a href="https://www.instagram.com/sweetfamily.jp" target="_blank" class="instagram-link"><img src="imagens/instagram-icon.png" class="instagram-icon"></a>`,
       descontosPossiveis: "※ In this lottery, you can win a coupon worth ¥100, ¥200, ¥300, ¥400, or ¥500!",
-      desconto: valor => ※ This coupon gives you a <span>¥${valor}</span> discount.,
+      desconto: valor => `※ This coupon gives you a <span>¥${valor}</span> discount.`,
       regrasTitulo: "Promotion Rules"
     },
     jp: {
@@ -186,22 +185,21 @@
       passo2: "2 - クーポンコードを入力し、青い確認ボタンを押してください。",
       passo3: "3 - 以下のように、画面左下に当選金額が表示されます。",
       passo4: "4 - 金額が表示されたら、購入準備完了です！そのままご購入ください。",
-      extraChance: 📸 チャンス追加！スイートファミリーのわたあめと一緒に写真を撮って、Instagramで @sweetfamily.jp をタグ付け投稿すると、無料わたあめが当たるかも！ <a href="https://www.instagram.com/sweetfamily.jp" target="_blank" class="instagram-link"><img src="imagens/instagram-icon.png" class="instagram-icon"></a>,
+      extraChance: `📸 チャンス追加！スイートファミリーのわたあめと一緒に写真を撮って、Instagramで @sweetfamily.jp をタグ付け投稿すると、無料わたあめが当たるかも！ <a href="https://www.instagram.com/sweetfamily.jp" target="_blank" class="instagram-link"><img src="imagens/instagram-icon.png" class="instagram-icon"></a>`,
       descontosPossiveis: "※ 本日のくじ引きでは、¥100 / ¥200 / ¥300 / ¥400 / ¥500 のいずれかが当たります！",
-      desconto: valor => ※ このクーポンを使うと、<span>¥${valor}</span> 割引になります。,
+      desconto: valor => `※ このクーポンを使うと、<span>¥${valor}</span> 割引になります。`,
       regrasTitulo: "キャンペーンのルール"
     }
   };
-
   function exibirCupom(cupom) {
     const validade = new Date();
     validade.setDate(validade.getDate() + 10);
-    const validadeStr = ${validade.getFullYear()}/${String(validade.getMonth() + 1).padStart(2, '0')}/${String(validade.getDate()).padStart(2, '0')};
+    const validadeStr = `${validade.getFullYear()}/${String(validade.getMonth() + 1).padStart(2, '0')}/${String(validade.getDate()).padStart(2, '0')}`;
     const t = traducoes[langSalvo];
 
     document.getElementById("cupomCode").textContent = cupom.code;
-    document.getElementById("cupomAviso").innerHTML = <strong>${t.desconto(cupom.valor)}</strong>;
-    document.getElementById("validadeLabel").innerHTML = ${t.validade} <span id="validade">${validadeStr}</span>;
+    document.getElementById("cupomAviso").innerHTML = `<strong>${t.desconto(cupom.valor)}</strong>`;
+    document.getElementById("validadeLabel").innerHTML = `${t.validade} <span id="validade">${validadeStr}</span>`;
     document.getElementById("valoresPossiveis").textContent = t.descontosPossiveis;
   }
 
@@ -211,11 +209,11 @@
     document.getElementById("titulo").textContent = t.titulo;
     document.getElementById("botaoSalvar").textContent = t.botaoSalvar;
     document.getElementById("comoUsarTitulo").textContent = t.comoUsar;
-    document.getElementById("passo1").innerHTML = <strong>${t.passo1}</strong>;
-    document.getElementById("passo2").innerHTML = <strong>${t.passo2}</strong>;
-    document.getElementById("passo3").innerHTML = <strong>${t.passo3}</strong>;
-    document.getElementById("passo4").innerHTML = <strong>${t.passo4}</strong>;
-    document.getElementById("extraChance").innerHTML = <strong>${t.extraChance}</strong>;
+    document.getElementById("passo1").innerHTML = `<strong>${t.passo1}</strong>`;
+    document.getElementById("passo2").innerHTML = `<strong>${t.passo2}</strong>`;
+    document.getElementById("passo3").innerHTML = `<strong>${t.passo3}</strong>`;
+    document.getElementById("passo4").innerHTML = `<strong>${t.passo4}</strong>`;
+    document.getElementById("extraChance").innerHTML = `<strong>${t.extraChance}</strong>`;
     document.getElementById("regrasTitulo").textContent = t.regrasTitulo;
 
     const regrasTexto = {
@@ -258,8 +256,7 @@
     });
   }
 
-   const dadosCupom = JSON.parse(localStorage.getItem("sweet_family_cupom_diario") || "{}");
-
+  const dadosCupom = JSON.parse(localStorage.getItem("sweet_family_cupom_diario") || "{}");
   if (dadosCupom.data === hojeStr) {
     exibirCupom(dadosCupom.cupom);
   } else {
@@ -267,24 +264,33 @@
       fp.get().then(result => {
         const id = result.visitorId;
 
-        fetch(${endpoint}?id=${id})
+        fetch("https://api.ipify.org?format=json")
           .then(res => res.json())
-          .then(cupom => {
-            if (cupom.error) {
-              alert(cupom.error);
-              return;
-            }
-            localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({ data: hojeStr, cupom }));
-            exibirCupom(cupom);
+          .then(ipData => {
+            const ip = ipData.ip;
+
+            fetch(`${endpoint}?id=${id}&ip=${ip}`)
+              .then(res => res.json())
+              .then(cupom => {
+             if (cupom.error) {
+  alert(`${cupom.error}\nCupom: ${cupom.cupom?.code} | ¥${cupom.cupom?.valor}`);
+  if (cupom.cupom) {
+    localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({ data: hojeStr, cupom: cupom.cupom }));
+    exibirCupom(cupom.cupom);
+  }
+} else {
+  localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({ data: hojeStr, cupom }));
+  exibirCupom(cupom);
+}
+              })
+              .catch(() => alert("Erro ao comunicar com o servidor."));
           })
-          .catch(() => alert("Erro ao gerar cupom. Tente novamente."));
+          .catch(() => alert("Erro ao obter IP público."));
       });
     });
   }
 
   setLanguage(langSalvo);
-
 </script>
-
 </body>
 </html>

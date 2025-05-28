@@ -1,339 +1,98 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🎁 くじ引き | Sweet Family</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background: #fff5fb;
-      color: #4a004a;
-      text-align: center;
-      padding: 2rem;
+  <script>
+    const hoje = new Date();
+    const hojeStr = hoje.toISOString().split("T")[0];
+    const langSalvo = localStorage.getItem("lang_sweetfamily") || "jp";
+
+    function exibirCupom(cupom) {
+      const validade = new Date();
+      validade.setDate(validade.getDate() + 10);
+      const validadeStr = `${validade.getFullYear()}/${String(validade.getMonth() + 1).padStart(2, '0')}/${String(validade.getDate()).padStart(2, '0')}`;
+      const t = traducoes[langSalvo];
+
+      document.getElementById("cupomCode").textContent = cupom.code;
+      document.getElementById("cupomAviso").innerHTML = `<strong>${t.desconto(cupom.valor)}</strong>`;
+      document.getElementById("validadeLabel").innerHTML = `${t.validade} <span id="validade">${validadeStr}</span>`;
+      document.getElementById("valoresPossiveis").textContent = t.descontosPossiveis;
     }
-    .container {
-      background: #ffffff;
-      border-radius: 1.5rem;
-      padding: 2rem;
-      max-width: 500px;
-      margin: auto;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    }
-    .logo {
-      width: 90%;
-      max-width: 360px;
-      margin-bottom: 2rem;
-    }
-    .cupom {
-      background: #ffcbeb;
-      padding: 1.5rem;
-      border-radius: 1rem;
-      font-size: 1.5rem;
-      font-weight: bold;
-      margin: 1.5rem 0 0.5rem;
-    }
-    .cupom-desconto {
-      font-size: 0.95rem;
-      color: #4a004a;
-    }
-    .cupom-desconto span {
-      font-size: 1.4em;
-      font-weight: bold;
-      color: #e10098;
-    }
-    .validade {
-      font-size: 0.9rem;
-      color: #888;
-    }
-    .botao-salvar {
-      background-color: #ff92d0;
-      color: white;
-      border: none;
-      padding: 1rem 2rem;
-      font-size: 1rem;
-      font-weight: bold;
-      border-radius: 2rem;
-      cursor: pointer;
-      margin-top: 1rem;
-      transition: background-color 0.3s ease;
-    }
-    .botao-salvar:hover {
-      background-color: #e86db2;
-    }
-    .instrucoes {
-      margin-top: 2rem;
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-    .imagem-teclado {
-      margin-top: 1rem;
-      max-width: 240px;
-      border-radius: 2rem;
-      box-shadow: 0 0 6px rgba(0,0,0,0.2);
-    }
-    .idiomas {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-    }
-    .idiomas button {
-      background: transparent;
-      border: none;
-      font-weight: bold;
-      margin-left: 0.5rem;
-      cursor: pointer;
-      color: #4a004a;
-    }
-    .instagram-link {
-      display: inline-block;
-      margin-left: 0.4rem;
-      vertical-align: middle;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-    }
-    .instagram-link:hover {
-      transform: scale(1.1);
-      opacity: 0.8;
-    }
-    .instagram-icon {
-      width: 20px;
-      height: 20px;
-      border-radius: 4px;
-      vertical-align: text-bottom;
-    }
-  </style>
-</head>
-<body>
-  <div class="idiomas">
-    <button onclick="setLanguage('pt')">PT</button>
-    <button onclick="setLanguage('en')">EN</button>
-    <button onclick="setLanguage('jp')">JP</button>
-  </div>
 
-  <div class="container">
-    <img src="imagens/logo-sweet-family-oficial.png" alt="Sweet Family Logo" class="logo">
-    <h1>🎁 <span id="titulo">くじ引き</span></h1>
+    function setLanguage(lang) {
+      localStorage.setItem("lang_sweetfamily", lang);
+      const t = traducoes[lang];
 
-    <div class="cupom" id="cupomCode">CARREGANDO...</div>
-    <p class="cupom-desconto" id="cupomAviso">※ クーポンを読み込み中...</p>
+      document.getElementById("titulo").textContent = t.titulo;
+      document.getElementById("botaoSalvar").textContent = t.botaoSalvar;
+      document.getElementById("comoUsarTitulo").textContent = t.comoUsar;
+      document.getElementById("passo1").innerHTML = `<strong>${t.passo1}</strong>`;
+      document.getElementById("passo2").innerHTML = `<strong>${t.passo2}</strong>`;
+      document.getElementById("passo3").innerHTML = `<strong>${t.passo3}</strong>`;
+      document.getElementById("passo4").innerHTML = `<strong>${t.passo4}</strong>`;
+      document.getElementById("extraChance").innerHTML = `<strong>${t.extraChance}</strong>`;
+      document.getElementById("regrasTitulo").textContent = t.regrasTitulo;
+      document.getElementById("cuponsTitulo").textContent = t.cuponsTitulo;
+      document.getElementById("cuponsDescricao").textContent = t.cuponsDescricao;
+      document.getElementById("pacoteCol").textContent = t.colPacote;
+      document.getElementById("cupomCol").textContent = t.colCupom;
+      document.getElementById("precoCol").textContent = t.colPreco;
+      document.getElementById("quantidadeCol").textContent = t.colQtd;
+      document.getElementById("regraCupons").textContent = t.regraCupons;
+      atualizarPrecos(lang);
 
-    <button class="botao-salvar" onclick="window.print()">🖨️ <span id="botaoSalvar">クーポンを保存</span></button>
+      const regras = {
+        pt: [
+          "Cada pessoa pode participar do sorteio apenas 1 vez por dia.",
+          "O cupom é válido por 10 dias a partir da data de geração.",
+          "O cupom deve ser digitado na máquina antes da compra.",
+          "O desconto é aplicado automaticamente no valor da compra.",
+          "O cupom é válido somente nas máquinas da Sweet Family.",
+          "A Sweet Family se reserva o direito de cancelar a promoção a qualquer momento, sem aviso prévio.",
+          "Cupons obtidos por meios não autorizados serão considerados inválidos."
+        ],
+        en: [
+          "Each person can participate in the lottery only once per day.",
+          "The coupon is valid for 10 days from the date it is generated.",
+          "The coupon must be entered into the machine before the purchase.",
+          "The discount will be applied automatically to the purchase amount.",
+          "The coupon is valid only on Sweet Family machines.",
+          "Sweet Family reserves the right to cancel the promotion at any time without prior notice.",
+          "Coupons obtained through unauthorized means will be considered invalid."
+        ],
+        jp: [
+          "お一人様1日1回までくじ引きに参加できます。",
+          "クーポンは発行日から10日間有効です。",
+          "購入前にクーポンコードを機械に入力してください。",
+          "割引は自動的に購入金額に適用されます。",
+          "クーポンはスイートファミリーの機械のみで使用可能です。",
+          "スイートファミリーは予告なく本キャンペーンを終了する権利を有します。",
+          "不正な方法で取得されたクーポンは無効とされます。"
+        ]
+      };
 
-    <p class="validade" id="validadeLabel">有効期限: <span id="validade"></span></p>
-
-    <div class="instrucoes">
-      <h2 id="comoUsarTitulo">📌 使い方：</h2>
-      <p id="passo1"></p>
-      <img src="imagens/botao-promocode.png" alt="Promo Code Button" class="imagem-teclado">
-      <p id="passo2"></p>
-      <img src="imagens/teclado-confirmacao.png" alt="Machine Keyboard" class="imagem-teclado">
-      <p id="passo3"></p>
-      <img src="imagens/valor-premio.png" alt="Prize Value Example" class="imagem-teclado">
-      <p id="passo4"></p>
-
-      <p id="valoresPossiveis" class="cupom-desconto"></p>
-
-      <p id="extraChance"></p>
-
-      <div class="instrucoes" style="margin-top: 2.5rem;">
-        <h2>📄 <span id="regrasTitulo">Regras da Promoção</span></h2>
-        <ul id="regrasConteudo" style="text-align: left; font-size: 0.9rem; padding-left: 1rem; line-height: 1.6;"></ul>
-      </div>
-
-      <div class="instrucoes" style="margin-top: 3rem;" id="cuponsPacotes">
-        <h2 id="cuponsTitulo">🎟️ Cupons para Pacotes Promocionais</h2>
-        <p id="cuponsDescricao" style="font-size: 0.95rem;"></p>
-        <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.95rem;">
-          <thead>
-            <tr style="background-color: #ffcbeb; color: #4a004a;">
-              <th style="padding: 10px;" id="pacoteCol">Pacote</th>
-              <th style="padding: 10px;" id="cupomCol">Cupom</th>
-              <th style="padding: 10px;" id="precoCol">Preço Promocional</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Sweet Duo Pack</strong></td>
-              <td><code style="font-weight: bold;">64512837</code></td>
-              <td><strong style="color: #e10098;" id="precoDuo">¥1.300</strong></td>
-            </tr>
-            <tr>
-              <td><strong>Triple Joy Combo</strong></td>
-              <td><code style="font-weight: bold;">47561392</code></td>
-              <td><strong style="color: #e10098;" id="precoTriple">¥1.900</strong></td>
-            </tr>
-            <tr>
-              <td><strong>Premium Family Pack</strong></td>
-              <td><code style="font-weight: bold;">61735429</code></td>
-              <td><strong style="color: #e10098;" id="precoPremium">¥2.400</strong></td>
-            </tr>
-          </tbody>
-        </table>
-        <p id="regraCupons" style="margin-top: 1rem; font-size: 0.9rem; color: #4a004a;"></p>
-      </div>
-    </div>
-  </div>
-
-<script>
-  const hoje = new Date();
-  const hojeStr = hoje.toISOString().split("T")[0];
-  const langSalvo = localStorage.getItem("lang_sweetfamily") || "jp";
-
-  const traducoes = {
-    pt: {
-      titulo: "Sorteio",
-      botaoSalvar: "Salvar Cupom",
-      validade: "(Você também pode tirar um Print) Válido até:",
-      comoUsar: "📌 Como usar:",
-      passo1: "1 - Toque no botão rosa “Promotion Code” (canto inferior esquerdo da tela).",
-      passo2: "2 - Digite o código do cupom e confirme no botão azul.",
-      passo3: "3 - A máquina mostrará o valor do seu prêmio no canto inferior esquerdo.",
-      passo4: "4 - Se o valor apareceu, funcionou! Agora é só comprar normalmente.",
-      extraChance: `📸 Chance extra! Poste uma foto com o algodão doce da Sweet Family e marque @sweetfamily.jp no Instagram para concorrer a um algodão doce grátis. <a href="https://www.instagram.com/sweetfamily.jp" target="_blank" class="instagram-link"><img src="imagens/instagram-icon.png" class="instagram-icon"></a>`,
-      descontosPossiveis: "※ Neste sorteio, você pode ganhar um cupom de ¥100, ¥200, ¥300, ¥400 ou ¥500!",
-      desconto: valor => `※ Este cupom dá direito a <span>¥${valor}</span> de desconto.`,
-      regrasTitulo: "Regras da Promoção",
-      cuponsTitulo: "🎟️ Cupons para Pacotes Promocionais",
-      cuponsDescricao: "Você pode usar um desses cupons especiais ao atingir a quantidade mínima no carrinho:",
-      colPacote: "Pacote",
-      colCupom: "Cupom",
-      colPreco: "Preço Promocional",
-      regraCupons: "🛒 É necessário adicionar o total normal no carrinho (ex: 4 unidades por ¥4.000) antes de aplicar o cupom."
-    },
-    en: {
-      titulo: "Lottery",
-      botaoSalvar: "Save Coupon",
-      validade: "(You can also take a screenshot) Valid until:",
-      comoUsar: "📌 How to use:",
-      passo1: "1 - Tap the pink 'Promotion Code' button (bottom left).",
-      passo2: "2 - Enter the coupon code and confirm using the blue button.",
-      passo3: "3 - The machine will show your prize in the bottom-left corner.",
-      passo4: "4 - If a value appeared, it worked! Now complete your purchase.",
-      extraChance: `📸 Extra chance! Post a photo with your Sweet Family cotton candy and tag @sweetfamily.jp on Instagram to win one for free! <a href="https://www.instagram.com/sweetfamily.jp" target="_blank" class="instagram-link"><img src="imagens/instagram-icon.png" class="instagram-icon"></a>`,
-      descontosPossiveis: "※ In this lottery, you can win a coupon worth ¥100, ¥200, ¥300, ¥400, or ¥500!",
-      desconto: valor => `※ This coupon gives you a <span>¥${valor}</span> discount.`,
-      regrasTitulo: "Promotion Rules",
-      cuponsTitulo: "🎟️ Special Combo Coupons",
-      cuponsDescricao: "You can use one of these special coupons when your cart reaches the required quantity:",
-      colPacote: "Combo",
-      colCupom: "Coupon",
-      colPreco: "Promo Price",
-      regraCupons: "🛒 Make sure to add the full amount first (e.g. 4 units for ¥4,000) before applying the coupon."
-    },
-    jp: {
-      titulo: "くじ引き",
-      botaoSalvar: "クーポンを保存",
-      validade: "（スクリーンショットでもOK）有効期限:",
-      comoUsar: "📌 使い方：",
-      passo1: "1 - 画面左下のピンクの「プロモーションコード」ボタンをタップしてください。",
-      passo2: "2 - クーポンコードを入力し、青い確認ボタンを押してください。",
-      passo3: "3 - 以下のように、画面左下に当選金額が表示されます。",
-      passo4: "4 - 金額が表示されたら、購入準備完了です！そのままご購入ください。",
-      extraChance: `📸 チャンス追加！スイートファミリーのわたあめと一緒に写真を撮って、Instagramで @sweetfamily.jp をタグ付け投稿すると、無料わたあめが当たるかも！ <a href="https://www.instagram.com/sweetfamily.jp" target="_blank" class="instagram-link"><img src="imagens/instagram-icon.png" class="instagram-icon"></a>`,
-      descontosPossiveis: "※ 本日のくじ引きでは、¥100 / ¥200 / ¥300 / ¥400 / ¥500 のいずれかが当たります！",
-      desconto: valor => `※ このクーポンを使うと、<span>¥${valor}</span> 割引になります。`,
-      regrasTitulo: "キャンペーンのルール",
-      cuponsTitulo: "🎟️ お得なセットクーポン",
-      cuponsDescricao: "対象の購入数をカートに追加すると、以下のクーポンが使えます：",
-      colPacote: "セット",
-      colCupom: "クーポンコード",
-      colPreco: "割引価格",
-      regraCupons: "🛒 クーポンを使う前に、通常価格の商品をすべてカートに追加してください（例：4個で¥4,000）。"
-    }
-  };
-
-  function exibirCupom(cupom) {
-    const validade = new Date();
-    validade.setDate(validade.getDate() + 10);
-    const validadeStr = `${validade.getFullYear()}/${String(validade.getMonth() + 1).padStart(2, '0')}/${String(validade.getDate()).padStart(2, '0')}`;
-    const t = traducoes[langSalvo];
-
-    document.getElementById("cupomCode").textContent = cupom.code;
-    document.getElementById("cupomAviso").innerHTML = `<strong>${t.desconto(cupom.valor)}</strong>`;
-    document.getElementById("validadeLabel").innerHTML = `${t.validade} <span id="validade">${validadeStr}</span>`;
-    document.getElementById("valoresPossiveis").textContent = t.descontosPossiveis;
-  }
-
-  function setLanguage(lang) {
-    localStorage.setItem("lang_sweetfamily", lang);
-    const t = traducoes[lang];
-
-    document.getElementById("titulo").textContent = t.titulo;
-    document.getElementById("botaoSalvar").textContent = t.botaoSalvar;
-    document.getElementById("comoUsarTitulo").textContent = t.comoUsar;
-    document.getElementById("passo1").innerHTML = `<strong>${t.passo1}</strong>`;
-    document.getElementById("passo2").innerHTML = `<strong>${t.passo2}</strong>`;
-    document.getElementById("passo3").innerHTML = `<strong>${t.passo3}</strong>`;
-    document.getElementById("passo4").innerHTML = `<strong>${t.passo4}</strong>`;
-    document.getElementById("extraChance").innerHTML = `<strong>${t.extraChance}</strong>`;
-
-    document.getElementById("regrasTitulo").textContent = t.regrasTitulo;
-
-    const regrasTexto = {
-      pt: [
-        "Cada pessoa pode participar do sorteio apenas 1 vez por dia.",
-        "O cupom é válido por 10 dias a partir da data de geração.",
-        "O cupom deve ser digitado na máquina antes da compra.",
-        "O desconto é aplicado automaticamente no valor da compra.",
-        "O cupom é válido somente nas máquinas da Sweet Family.",
-        "A Sweet Family se reserva o direito de cancelar a promoção a qualquer momento, sem aviso prévio.",
-        "Cupons obtidos por meios não autorizados serão considerados inválidos."
-      ],
-      en: [
-        "Each person can participate in the lottery only once per day.",
-        "The coupon is valid for 10 days from the date it is generated.",
-        "The coupon must be entered into the machine before the purchase.",
-        "The discount will be applied automatically to the purchase amount.",
-        "The coupon is valid only on Sweet Family machines.",
-        "Sweet Family reserves the right to cancel the promotion at any time without prior notice.",
-        "Coupons obtained through unauthorized means will be considered invalid."
-      ],
-      jp: [
-        "お一人様1日1回までくじ引きに参加できます。",
-        "クーポンは発行日から10日間有効です。",
-        "購入前にクーポンコードを機械に入力してください。",
-        "割引は自動的に購入金額に適用されます。",
-        "クーポンはスイートファミリーの機械のみで使用可能です。",
-        "スイートファミリーは予告なく本キャンペーンを終了する権利を有します。",
-        "不正な方法で取得されたクーポンは無効とされます。"
-      ]
-    };
-
-    const regras = regrasTexto[lang];
-    const lista = document.getElementById("regrasConteudo");
-    lista.innerHTML = "";
-    regras.forEach(txt => {
-      const li = document.createElement("li");
-      li.textContent = txt;
-      lista.appendChild(li);
-    });
-
-    // Traduzir cabeçalhos dos cupons promocionais
-    document.getElementById("cuponsTitulo").textContent = t.cuponsTitulo;
-    document.getElementById("cuponsDescricao").textContent = t.cuponsDescricao;
-    document.getElementById("pacoteCol").textContent = t.colPacote;
-    document.getElementById("cupomCol").textContent = t.colCupom;
-    document.getElementById("precoCol").textContent = t.colPreco;
-    document.getElementById("regraCupons").textContent = t.regraCupons;
-  }
-
-  const dadosCupom = JSON.parse(localStorage.getItem("sweet_family_cupom_diario") || "{}");
-  if (dadosCupom.data === hojeStr) {
-    exibirCupom(dadosCupom.cupom);
-  } else {
-    fetch("https://script.google.com/macros/s/AKfycbyHQmXsbjpOVGasBGxoY_6MQm42E4_FGCwwupVOLymRVIK6jZBhSyKEGOGN02pPKHaK/exec")
-      .then(res => res.json())
-      .then(cupom => {
-        if (cupom.error) {
-          alert("Sem cupons disponíveis no momento.");
-          return;
-        }
-        localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({ data: hojeStr, cupom }));
-        exibirCupom(cupom);
+      const ul = document.getElementById("regrasConteudo");
+      ul.innerHTML = "";
+      regras[lang].forEach(txt => {
+        const li = document.createElement("li");
+        li.textContent = txt;
+        ul.appendChild(li);
       });
-  }
+    }
 
-  setLanguage(langSalvo);
-</script>
+    const dadosCupom = JSON.parse(localStorage.getItem("sweet_family_cupom_diario") || "{}");
+    if (dadosCupom.data === hojeStr) {
+      exibirCupom(dadosCupom.cupom);
+    } else {
+      fetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec")
+        .then(res => res.json())
+        .then(cupom => {
+          if (cupom.error) {
+            alert("Sem cupons disponíveis no momento.");
+            return;
+          }
+          localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({ data: hojeStr, cupom }));
+          exibirCupom(cupom);
+        });
+    }
+
+    setLanguage(langSalvo);
+  </script>
 </body>
 </html>

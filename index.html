@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Teste GET e POST com IP</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste de IP para Google Sheets</title>
 </head>
 <body style="font-family: Arial; text-align: center; padding: 2rem;">
-  <h2>📡 Teste de Envio de IP para Google Sheets</h2>
+  <h2>📡 Teste de IP - Sweet Family</h2>
   <button onclick="enviarGet()">Testar GET</button>
   <button onclick="enviarPost()">Testar POST</button>
-  <p id="resposta" style="margin-top: 2rem; font-weight: bold; color: green;"></p>
+  <p id="resposta" style="margin-top: 2rem; font-weight: bold;"></p>
 
   <script>
     const endpoint = "https://script.google.com/macros/s/AKfycbyRuvC20V4l3UMqPRrGnofiO534uTR3cMs5H66NMBH4IgFAximG2eRKZiwDde24jCqY_Q/exec";
@@ -25,8 +25,8 @@
       obterIP(ip => {
         fetch(`${endpoint}?ip=${ip}`)
           .then(res => res.text())
-          .then(txt => document.getElementById("resposta").innerText = "GET OK: " + txt)
-          .catch(err => document.getElementById("resposta").innerText = "Erro GET: " + err);
+          .then(txt => document.getElementById("resposta").innerText = "✅ GET: " + txt)
+          .catch(err => document.getElementById("resposta").innerText = "❌ Erro GET: " + err);
       });
     }
 
@@ -39,9 +39,9 @@
           },
           body: JSON.stringify({ ip })
         })
-        .then(res => res.text())
-        .then(txt => document.getElementById("resposta").innerText = "POST OK: " + txt)
-        .catch(err => document.getElementById("resposta").innerText = "Erro POST: " + err);
+          .then(res => res.text())
+          .then(txt => document.getElementById("resposta").innerText = "✅ POST: " + txt)
+          .catch(err => document.getElementById("resposta").innerText = "❌ Erro POST: " + err);
       });
     }
   </script>

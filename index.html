@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
+<head><script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🎁 くじ引き | Sweet Family</title>
@@ -257,17 +258,16 @@
     });
   }
 
-  const dadosCupom = JSON.parse(localStorage.getItem("sweet_family_cupom_diario") || "{}");
+   const dadosCupom = JSON.parse(localStorage.getItem("sweet_family_cupom_diario") || "{}");
 
   if (dadosCupom.data === hojeStr) {
     exibirCupom(dadosCupom.cupom);
   } else {
-    fetch("https://api.ipify.org?format=json")
-      .then(res => res.json())
-      .then(data => {
-        const ip = data.ip;
+    FingerprintJS.load().then(fp => {
+      fp.get().then(result => {
+        const id = result.visitorId;
 
-        fetch(`${endpoint}?ip=${ip}`)
+        fetch(`${endpoint}?id=${id}`)
           .then(res => res.json())
           .then(cupom => {
             if (cupom.error) {
@@ -278,11 +278,12 @@
             exibirCupom(cupom);
           })
           .catch(() => alert("Erro ao gerar cupom. Tente novamente."));
-      })
-      .catch(() => alert("Erro ao detectar seu IP. Verifique sua conexão."));
+      });
+    });
   }
 
   setLanguage(langSalvo);
+
 </script>
 
 </body>

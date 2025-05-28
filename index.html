@@ -3,12 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teste de IP para Google Sheets</title>
+  <title>Envio via GET - Sweet Family</title>
 </head>
 <body style="font-family: Arial; text-align: center; padding: 2rem;">
-  <h2>📡 Teste de IP - Sweet Family</h2>
-  <button onclick="enviarGet()">Testar GET</button>
-  <button onclick="enviarPost()">Testar POST</button>
+  <h2>📡 Enviar dados para o Google Sheets (GET)</h2>
+
+  <input type="text" id="nome" placeholder="Seu nome" /><br><br>
+  <input type="number" id="idade" placeholder="Idade" /><br><br>
+  <label>
+    <input type="checkbox" id="vip" /> Cliente VIP
+  </label><br><br>
+
+  <button onclick="enviarGet()">Enviar</button>
   <p id="resposta" style="margin-top: 2rem; font-weight: bold;"></p>
 
   <script>
@@ -18,30 +24,20 @@
       fetch("https://api.ipify.org?format=json")
         .then(response => response.json())
         .then(data => callback(data.ip))
-        .catch(() => callback("IP não detectado"));
+        .catch(() => callback("não detectado"));
     }
 
     function enviarGet() {
-      obterIP(ip => {
-        fetch(`${endpoint}?ip=${ip}`)
-          .then(res => res.text())
-          .then(txt => document.getElementById("resposta").innerText = "✅ GET: " + txt)
-          .catch(err => document.getElementById("resposta").innerText = "❌ Erro GET: " + err);
-      });
-    }
+      const nome = document.getElementById("nome").value;
+      const idade = document.getElementById("idade").value;
+      const vip = document.getElementById("vip").checked ? "sim" : "nao";
 
-    function enviarPost() {
       obterIP(ip => {
-        fetch(endpoint, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ ip })
-        })
+        const url = `${endpoint}?ip=${encodeURIComponent(ip)}&nome=${encodeURIComponent(nome)}&idade=${encodeURIComponent(idade)}&vip=${encodeURIComponent(vip)}`;
+        fetch(url)
           .then(res => res.text())
-          .then(txt => document.getElementById("resposta").innerText = "✅ POST: " + txt)
-          .catch(err => document.getElementById("resposta").innerText = "❌ Erro POST: " + err);
+          .then(txt => document.getElementById("resposta").innerText = "✅ Dados enviados: " + txt)
+          .catch(err => document.getElementById("resposta").innerText = "❌ Erro: " + err);
       });
     }
   </script>

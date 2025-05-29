@@ -191,18 +191,19 @@
       regrasTitulo: "キャンペーンのルール"
     }
   };
-  function exibirCupom(cupom) {
-    const validade = new Date();
-    validade.setDate(validade.getDate() + 10);
-    const validadeStr = `${validade.getFullYear()}/${String(validade.getMonth() + 1).padStart(2, '0')}/${String(validade.getDate()).padStart(2, '0')}`;
-    const t = traducoes[langSalvo];
+function exibirCupom(cupom) {
+  const hoje = new Date();
+  const hojeJP = new Date(hoje.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
+  const validade = new Date(hojeJP);
+  validade.setDate(validade.getDate() + 10);
+  const validadeStr = `${validade.getFullYear()}/${String(validade.getMonth() + 1).padStart(2, '0')}/${String(validade.getDate()).padStart(2, '0')}`;
+  const t = traducoes[langSalvo];
 
-    document.getElementById("cupomCode").textContent = cupom.code;
-    document.getElementById("cupomAviso").innerHTML = `<strong>${t.desconto(cupom.valor)}</strong>`;
-    document.getElementById("validadeLabel").innerHTML = `${t.validade} <span id="validade">${validadeStr}</span>`;
-    document.getElementById("valoresPossiveis").textContent = t.descontosPossiveis;
-  }
-
+  document.getElementById("cupomCode").textContent = cupom.code;
+  document.getElementById("cupomAviso").innerHTML = `<strong>${t.desconto(cupom.valor)}</strong>`;
+  document.getElementById("validadeLabel").innerHTML = `${t.validade} <span id="validade">${validadeStr}</span>`;
+  document.getElementById("valoresPossiveis").textContent = t.descontosPossiveis;
+}
   function setLanguage(lang) {
     localStorage.setItem("lang_sweetfamily", lang);
     const t = traducoes[lang];

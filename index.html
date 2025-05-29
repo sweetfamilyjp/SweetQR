@@ -257,6 +257,7 @@
   }
 
   const dadosCupom = JSON.parse(localStorage.getItem("sweet_family_cupom_diario") || "{}");
+
   if (dadosCupom.data === hojeStr) {
     exibirCupom(dadosCupom.cupom);
   } else {
@@ -272,16 +273,17 @@
             fetch(`${endpoint}?id=${id}&ip=${ip}`)
               .then(res => res.json())
               .then(cupom => {
-             if (cupom.error) {
-  alert(`${cupom.error}\nCupom: ${cupom.cupom?.code} | ¥${cupom.cupom?.valor}`);
-  if (cupom.cupom) {
-    localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({ data: hojeStr, cupom: cupom.cupom }));
-    exibirCupom(cupom.cupom);
-  }
-} else {
-  localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({ data: hojeStr, cupom }));
-  exibirCupom(cupom);
-}
+                if (cupom.error) {
+                  alert(`${cupom.error}\nCupom: ${cupom.code} | ¥${cupom.valor}`);
+                }
+
+                if (cupom.code && cupom.valor) {
+                  localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({
+                    data: hojeStr,
+                    cupom: cupom
+                  }));
+                  exibirCupom(cupom);
+                }
               })
               .catch(() => alert("Erro ao comunicar com o servidor."));
           })

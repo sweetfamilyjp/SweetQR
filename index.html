@@ -142,8 +142,16 @@
   </div>
 </div>
 <script>
-  const hoje = new Date();
-  const hojeStr = hoje.toISOString().split("T")[0];
+function getHojeTokyoStr() {
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Tokyo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  });
+  return formatter.format(new Date());
+}
+const hojeStr = getHojeTokyoStr();
   const langSalvo = localStorage.getItem("lang_sweetfamily") || "jp";
   const endpoint = "https://script.google.com/macros/s/AKfycbyHQmXsbjpOVGasBGxoY_6MQm42E4_FGCwwupVOLymRVIK6jZBhSyKEGOGN02pPKHaK/exec";
 

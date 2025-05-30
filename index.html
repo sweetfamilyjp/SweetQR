@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+  <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🎁 くじ引き | Sweet Family</title>
-  <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -105,44 +105,45 @@
   </style>
 </head>
 <body>
-  <div class="idiomas">
-    <button onclick="setLanguage('pt')">PT</button>
-    <button onclick="setLanguage('en')">EN</button>
-    <button onclick="setLanguage('jp')">JP</button>
-  </div>
+<div class="idiomas">
+  <button onclick="setLanguage('pt')">PT</button>
+  <button onclick="setLanguage('en')">EN</button>
+  <button onclick="setLanguage('jp')">JP</button>
+</div>
 
-  <div class="container">
-    <img src="imagens/logo-sweet-family-oficial.png" alt="Sweet Family Logo" class="logo">
-    <h1>🎁 <span id="titulo">くじ引き</span></h1>
+<div class="container">
+  <img src="imagens/logo-sweet-family-oficial.png" alt="Sweet Family Logo" class="logo">
+  <h1>🎁 <span id="titulo">くじ引き</span></h1>
 
-    <div class="cupom" id="cupomCode">CARREGANDO...</div>
-    <p class="cupom-desconto" id="cupomAviso">※ クーポンを読み込み中...</p>
+  <div class="cupom" id="cupomCode">CARREGANDO...</div>
+  <p class="cupom-desconto" id="cupomAviso">※ クーポンを読み込み中...</p>
 
-    <button class="botao-salvar" onclick="window.print()">🖨️ <span id="botaoSalvar">クーポンを保存</span></button>
+  <button class="botao-salvar" onclick="window.print()">🖨️ <span id="botaoSalvar">クーポンを保存</span></button>
 
-    <p class="validade" id="validadeLabel">有効期限: <span id="validade"></span></p>
+  <p class="validade" id="validadeLabel">有効期限: <span id="validade"></span></p>
 
-    <div class="instrucoes">
-      <h2 id="comoUsarTitulo">📌 使い方：</h2>
-      <p id="passo1"></p>
-      <img src="imagens/botao-promocode.png" alt="Promo Code Button" class="imagem-teclado">
-      <p id="passo2"></p>
-      <img src="imagens/teclado-confirmacao.png" alt="Machine Keyboard" class="imagem-teclado">
-      <p id="passo3"></p>
-      <img src="imagens/valor-premio.png" alt="Prize Value Example" class="imagem-teclado">
-      <p id="passo4"></p>
+  <div class="instrucoes">
+    <h2 id="comoUsarTitulo">📌 使い方：</h2>
+    <p id="passo1"></p>
+    <img src="imagens/botao-promocode.png" alt="Promo Code Button" class="imagem-teclado">
+    <p id="passo2"></p>
+    <img src="imagens/teclado-confirmacao.png" alt="Machine Keyboard" class="imagem-teclado">
+    <p id="passo3"></p>
+    <img src="imagens/valor-premio.png" alt="Prize Value Example" class="imagem-teclado">
+    <p id="passo4"></p>
 
-      <p id="valoresPossiveis" class="cupom-desconto"></p>
-      <p id="extraChance"></p>
+    <p id="valoresPossiveis" class="cupom-desconto"></p>
+    <p id="extraChance"></p>
 
-      <div class="instrucoes" style="margin-top: 2.5rem;">
-        <h2>📄 <span id="regrasTitulo">Regras da Promoção</span></h2>
-        <ul id="regrasConteudo" style="text-align: left; font-size: 0.9rem; padding-left: 1rem; line-height: 1.6;"></ul>
-      </div>
+    <div class="instrucoes" style="margin-top: 2.5rem;">
+      <h2>📄 <span id="regrasTitulo">Regras da Promoção</span></h2>
+      <ul id="regrasConteudo" style="text-align: left; font-size: 0.9rem; padding-left: 1rem; line-height: 1.6;"></ul>
     </div>
   </div>
-
+</div>
 <script>
+  const hoje = new Date();
+  const hojeStr = hoje.toISOString().split("T")[0];
   const langSalvo = localStorage.getItem("lang_sweetfamily") || "jp";
   const endpoint = "https://script.google.com/macros/s/AKfycbyHQmXsbjpOVGasBGxoY_6MQm42E4_FGCwwupVOLymRVIK6jZBhSyKEGOGN02pPKHaK/exec";
 
@@ -190,29 +191,12 @@
       regrasTitulo: "キャンペーンのルール"
     }
   };
-
-  function getHojeTokyoStr() {
-    const formatter = new Intl.DateTimeFormat("en-CA", {
-      timeZone: "Asia/Tokyo",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit"
-    });
-    return formatter.format(new Date());
-  }
-
   function exibirCupom(cupom) {
     const validade = new Date();
     validade.setDate(validade.getDate() + 10);
-    const formatter = new Intl.DateTimeFormat("ja-JP", {
-      timeZone: "Asia/Tokyo",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit"
-    });
-    const validadeStr = formatter.format(validade).replace(/\//g, '/');
-
+    const validadeStr = `${validade.getFullYear()}/${String(validade.getMonth() + 1).padStart(2, '0')}/${String(validade.getDate()).padStart(2, '0')}`;
     const t = traducoes[langSalvo];
+
     document.getElementById("cupomCode").textContent = cupom.code;
     document.getElementById("cupomAviso").innerHTML = `<strong>${t.desconto(cupom.valor)}</strong>`;
     document.getElementById("validadeLabel").innerHTML = `${t.validade} <span id="validade">${validadeStr}</span>`;
@@ -233,29 +217,46 @@
     document.getElementById("regrasTitulo").textContent = t.regrasTitulo;
 
     const regrasTexto = {
-      pt: [...],
-      en: [...],
-      jp: [...]
+      pt: [
+        "Cada pessoa pode participar do sorteio apenas 1 vez por dia.",
+        "O cupom é válido por 10 dias a partir da data de geração.",
+        "O cupom deve ser digitado na máquina antes da compra.",
+        "O desconto é aplicado automaticamente no valor da compra.",
+        "O cupom é válido somente nas máquinas da Sweet Family.",
+        "A Sweet Family se reserva o direito de cancelar a promoção a qualquer momento, sem aviso prévio.",
+        "Cupons obtidos por meios não autorizados serão considerados inválidos."
+      ],
+      en: [
+        "Each person can participate in the lottery only once per day.",
+        "The coupon is valid for 10 days from the date it is generated.",
+        "The coupon must be entered into the machine before the purchase.",
+        "The discount will be applied automatically to the purchase amount.",
+        "The coupon is valid only on Sweet Family machines.",
+        "Sweet Family reserves the right to cancel the promotion at any time without prior notice.",
+        "Coupons obtained through unauthorized means will be considered invalid."
+      ],
+      jp: [
+        "お一人様1日1回までくじ引きに参加できます。",
+        "クーポンは発行日から10日間有効です。",
+        "購入前にクーポンコードを機械に入力してください。",
+        "割引は自動的に購入金額に適用されます。",
+        "クーポンはスイートファミリーの機械のみで使用可能です。",
+        "スイートファミリーは予告なく本キャンペーンを終了する権利を有します。",
+        "不正な方法で取得されたクーポンは無効とされます。"
+      ]
     };
 
+    const regras = regrasTexto[lang];
     const lista = document.getElementById("regrasConteudo");
     lista.innerHTML = "";
-    regrasTexto[lang].forEach(txt => {
+    regras.forEach(txt => {
       const li = document.createElement("li");
       li.textContent = txt;
       lista.appendChild(li);
     });
   }
 
-  const hojeStr = getHojeTokyoStr();
-  const dadosCupomRaw = localStorage.getItem("sweet_family_cupom_diario");
-  let dadosCupom = {};
-
-  try {
-    dadosCupom = JSON.parse(dadosCupomRaw || "{}");
-  } catch (e) {
-    localStorage.removeItem("sweet_family_cupom_diario");
-  }
+  const dadosCupom = JSON.parse(localStorage.getItem("sweet_family_cupom_diario") || "{}");
 
   if (dadosCupom.data === hojeStr) {
     exibirCupom(dadosCupom.cupom);
@@ -263,16 +264,19 @@
     FingerprintJS.load().then(fp => {
       fp.get().then(result => {
         const id = result.visitorId;
+
         fetch("https://api.ipify.org?format=json")
           .then(res => res.json())
           .then(ipData => {
             const ip = ipData.ip;
-            fetch(`${endpoint}?id=${id}&ip=${ip}&lang=${langSalvo}`)
+
+            fetch(`${endpoint}?id=${id}&ip=${ip}`)
               .then(res => res.json())
               .then(cupom => {
                 if (cupom.error) {
-                  alert(`${cupom.error}\nCupom: ${cupom.code || ""} | ¥${cupom.valor || ""}`);
+                  alert(`${cupom.error}\nCupom: ${cupom.code} | ¥${cupom.valor}`);
                 }
+
                 if (cupom.code && cupom.valor) {
                   localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({
                     data: hojeStr,
@@ -280,8 +284,10 @@
                   }));
                   exibirCupom(cupom);
                 }
-              });
-          });
+              })
+              .catch(() => alert("Erro ao comunicar com o servidor."));
+          })
+          .catch(() => alert("Erro ao obter IP público."));
       });
     });
   }

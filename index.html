@@ -311,48 +311,51 @@ const hojeStr = getHojeTokyoStr();
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ご連絡 | Sweet Family</title>
+  <title>Sweet Family | 連絡先</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
-      background: #fff5fb;
+      background: #fff0f8;
       color: #4a004a;
       text-align: center;
-      padding: 2rem;
+      padding: 2rem 1rem;
     }
     .container {
-      background: #ffffff;
-      border-radius: 1.5rem;
-      padding: 2rem;
       max-width: 500px;
       margin: auto;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     }
     .card {
-      background: #ffcbeb;
-      border-radius: 1rem;
-      padding: 1rem;
-      margin: 1rem 0;
+      background: #fcb8e2;
+      border-radius: 1.2rem;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.2rem;
       display: flex;
       align-items: center;
       gap: 1rem;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+      word-break: break-word;
     }
     .card img {
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
     }
     .card-content {
       text-align: left;
+      flex: 1;
     }
     .card-content a {
       color: #4a004a;
-      text-decoration: none;
       font-weight: bold;
-      display: block;
+      text-decoration: none;
+      font-size: 1rem;
+      word-wrap: break-word;
     }
     .card-content small {
-      color: #7a3d7a;
-      font-size: 0.85rem;
+      display: block;
+      color: #7d3e7d;
+      font-size: 0.9rem;
+      margin-top: 0.2rem;
     }
   </style>
 </head>
@@ -372,7 +375,7 @@ const hojeStr = getHojeTokyoStr();
     <div class="card">
       <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt="Google Maps">
       <div class="card-content">
-        <a href="https://maps.app.goo.gl/vfaxPJoxziofV4Bm9" target="_blank">Sweet Family 1号 - KOKO Import Shop</a>
+        <a href="https://maps.app.goo.gl/vfaxPJoxziofV4Bm9" target="_blank">Sweet Family 1号 -<br>KOKO Import Shop</a>
         <small>ここだよ</small>
       </div>
     </div>
@@ -381,7 +384,7 @@ const hojeStr = getHojeTokyoStr();
     <div class="card">
       <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt="Google Maps">
       <div class="card-content">
-        <a href="https://maps.app.goo.gl/HZP3gDVg3yeJgNLa7" target="_blank">Sweet Family 2号 - KiTARA 2階</a>
+        <a href="https://maps.app.goo.gl/HZP3gDVg3yeJgNLa7" target="_blank">Sweet Family 2号 -<br>KiTARA 2階</a>
         <small>ここもチェックしてね</small>
       </div>
     </div>
@@ -394,15 +397,17 @@ const hojeStr = getHojeTokyoStr();
       </div>
     </div>
 
-    <!-- Phone -->
+    <!-- Telefone -->
     <div class="card">
-      <img src="https://cdn-icons-png.flaticon.com/512/455/455705.png" alt="Phone">
+      <img src="https://cdn-icons-png.flaticon.com/512/455/455705.png" alt="Telefone">
       <div class="card-content">
         <a href="tel:+818052954536">お問い合わせ電話番号</a>
         <small>(+81 80-5295-4536)</small>
       </div>
     </div>
+
   </div>
 </body>
 </html>
+
 

@@ -264,42 +264,42 @@ const hojeStr = getHojeTokyoStr();
     });
   }
 
-  const dadosCupom = JSON.parse(localStorage.getItem("sweet_family_cupom_diario") || "{}");
+const dadosCupom = JSON.parse(localStorage.getItem("sweet_family_cupom_diario") || "{}");
 
-  if (dadosCupom.data === hojeStr) {
-    exibirCupom(dadosCupom.cupom);
-  } else {
-    FingerprintJS.load().then(fp => {
-      fp.get().then(result => {
-        const id = result.visitorId;
+if (dadosCupom.data === hojeStr) {
+  exibirCupom(dadosCupom.cupom);
+} else {
+  FingerprintJS.load().then(fp => {
+    fp.get().then(result => {
+      const id = result.visitorId;
 
-        fetch("https://api.ipify.org?format=json")
-          .then(res => res.json())
-          .then(ipData => {
-            const ip = ipData.ip;
+      fetch("https://api.ipify.org?format=json")
+        .then(res => res.json())
+        .then(ipData => {
+          const ip = ipData.ip;
 
-            fetch(`${endpoint}?id=${id}&ip=${ip}`)
-              .then(res => res.json())
-              .then(cupom => {
-                if (cupom.error) {
-                  alert(`${cupom.error}\nCupom: ${cupom.code} | ¥${cupom.valor}`);
-                }
+          fetch(`${endpoint}?id=${id}&ip=${ip}`)
+            .then(res => res.json())
+            .then(cupom => {
+              if (cupom.error) {
+                alert(`${cupom.error}\nCupom: ${cupom.code} | ¥${cupom.valor}`);
+              }
 
-                if (cupom.code && cupom.valor) {
-                  localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({
-                    data: hojeStr,
-                    cupom: cupom
-                  }));
-                  exibirCupom(cupom);
-                }
-              })
-              .catch(() => alert("Erro ao comunicar com o servidor."));
-          })
-          .catch(() => alert("Erro ao obter IP público."));
-      });
+              if (cupom.code && cupom.valor) {
+                localStorage.setItem("sweet_family_cupom_diario", JSON.stringify({
+                  data: hojeStr,
+                  cupom: cupom
+                }));
+                exibirCupom(cupom);
+              }
+            })
+            .catch(() => alert("Erro ao comunicar com o servidor."));
+        })
+        .catch(() => alert("Erro ao obter IP público."));
     });
   }
 
+  );
   setLanguage(langSalvo);
 </script>
 </body>
